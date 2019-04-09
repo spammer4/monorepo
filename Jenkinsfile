@@ -4,8 +4,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                dir "003-landing-page"
-                sh "ls"     
+                dir("003-landing-page") {
+                    sh "ls"
+                } 
             }
         }
         /*stage('Test') {
