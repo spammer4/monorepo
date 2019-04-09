@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                dir("003-landing-page")
-                sh "yarn install"     
+                //dir("003-landing-page")
+                sh "ls"     
             }
         }
         /*stage('Test') {
