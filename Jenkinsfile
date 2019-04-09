@@ -1,3 +1,5 @@
+// This is a simple pipeline script
+
 pipeline {
     agent any
 
