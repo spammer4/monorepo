@@ -4,10 +4,11 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                dir("003-landing-page")
+                sh "yarn install"     
             }
         }
-        stage('Test') {
+        /*stage('Test') {
             steps {
                 echo 'Testing..'
             }
@@ -16,6 +17,6 @@ pipeline {
             steps {
                 echo 'Deploying....'
             }
-        }
+        }*/
     }
 }
