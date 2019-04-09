@@ -5,7 +5,8 @@ pipeline {
         stage('Build') {
             steps {
                 dir("003-landing-page") {
-                    sh "ls"
+                    sh "yarn install"
+                    sh "yarn run build"
                 } 
             }
         }
