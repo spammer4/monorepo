@@ -1,4 +1,4 @@
-// This is a simple pipeline script
+// This is a simple pipeline script - that will build
 
 pipeline {
     agent any
