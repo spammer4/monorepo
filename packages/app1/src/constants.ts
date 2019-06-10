@@ -1,1 +1,0 @@
-export const DEFAULT_GREETING = _DEFAULT_GREETING;
