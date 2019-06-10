@@ -1,0 +1,9 @@
+.stars { 
+    background-image: url("../images/stars_background.jpg"); 
+    color: white;
+}
+
+.greentext {
+    color: green;
+}
+
