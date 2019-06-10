@@ -1,18 +1,12 @@
 {
+  "private": true,
   "name": "typescript-base",
   "version": "1.0.0",
   "description": "This repo is the starting point for my typescript projects.",
   "main": "index.js",
-  "scripts": {
-    "prettier:base": "prettier --parser typescript",
-    "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
-    "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\"",
-    "test": "jest",
-    "build": "npm run clean && webpack",
-    "start": "npm run prettier:write && webpack-dev-server --mode development --open",
-    "clean": "rimraf dist",
-    "analyse-bundle": "npm run clean && webpack --env.ANALYSE_BUNDLES=yes"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/spammer4/typescript-base.git"
@@ -63,6 +57,7 @@
     "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
+    "lerna": "^3.15.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   }
