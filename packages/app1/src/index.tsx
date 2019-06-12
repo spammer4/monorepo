@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { HelloWorld } from "@common/lib/HelloWorld";
 import DashVersion from "./components/DashVersion";
+import { HelloWorld } from "@common/lib/HelloWorld";
 
 ReactDOM.render(
   <React.Fragment>

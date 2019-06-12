@@ -5,10 +5,17 @@ const path = require("path");
 const webpack = require("webpack");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const fs = require("fs");
+
+console.log();
+
+const getGlobals = () => { 
+    return fs.existsSync(path.resolve("./globals.js")) ? require(path.resolve("./globals.js")) : {};
+}
 
 const plugins = (env) => {    
 
-    const isProduction = env && env.PRODUCTION;
+    const isDevelopment = env && env.DEVELOPMENT | false;
 
     const allPlugins = ([
 
@@ -23,9 +30,7 @@ const plugins = (env) => {
             defaultAttribute: 'defer'
           }),
           // We can define constants here 
-          new webpack.DefinePlugin({                        
-            _DEFAULT_GREETING: JSON.stringify("This is a sample project constant."),
-        }),
+          new webpack.DefinePlugin(getGlobals()),
         // Copy any static resources required to the dist folder  
         new CopyWebpackPlugin([
             { from: "src/images", to: "images" }
@@ -34,12 +39,12 @@ const plugins = (env) => {
 
     // If we are not doing any analysis on the bundle then we don't need this. 
     if (env && env.ANALYSE_BUNDLES) {
-        allPlugins.push(new BundleAnalyzerPlugin());
+        allPlugins.push(new BundleAnalyzerPlugin({analyzerPort: env.ANALYZER_PORT | 8888}));
     }
 
     // If we are in development then we add the hot module plugin, this will break [contenthash] if 
     // running in production mode     
-    if (!isProduction) {
+    if (isDevelopment) {
         // HMR
         allPlugins.push(new webpack.HotModuleReplacementPlugin());
     }
@@ -49,15 +54,15 @@ const plugins = (env) => {
 
 module.exports = env => { 
     
-    const isProduction = env && env.PRODUCTION;
+    const isDevelopment = env && env.DEVELOPMENT | false;
 
     return {   
-    mode: isProduction ? "production" : "development",     
+    mode: isDevelopment ? "development" : "production",     
     entry: { 
         app: "./src/index.tsx",        
     },
     output: {
-        filename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",        
+        filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",        
         path: path.resolve("dist"),        
     },
     stats: {
@@ -96,8 +101,6 @@ module.exports = env => {
         },
     },   
     devServer: {
-        //port: 8080,
-        //port: port,
         contentBase: "./dist",
         hot: true,   
         index: "index.html",    
