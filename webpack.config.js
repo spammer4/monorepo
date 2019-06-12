@@ -6,7 +6,10 @@ const webpack = require("webpack");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 
-const plugins = (env) => {
+const plugins = (env) => {    
+
+    const isProduction = env && env.PRODUCTION;
+
     const allPlugins = ([
 
         // Copies the index.html template and tells it where to inject the script tags 
@@ -14,6 +17,7 @@ const plugins = (env) => {
             template: "./src/index.html",
             filename: "index.html",
             inject: "head",
+            chunks: ["app","react","vendor"]
           }),
           // This will defer the script until the page has been loaded, extension of HtmlWebPackPlugin
           new ScriptExtHtmlWebPackPlugin({
@@ -23,8 +27,6 @@ const plugins = (env) => {
           new webpack.DefinePlugin({                        
             _DEFAULT_GREETING: JSON.stringify("This is a sample project constant."),
         }),
-        // HMR
-        new webpack.HotModuleReplacementPlugin(),
         // Copy any static resources required to the dist folder  
         new CopyWebpackPlugin([
             { from: "src/images", to: "images" }
@@ -35,17 +37,28 @@ const plugins = (env) => {
     if (env && env.ANALYSE_BUNDLES) {
         allPlugins.push(new BundleAnalyzerPlugin());
     }
+
+    // If we are in development then we add the hot module plugin, this will break [contenthash] if 
+    // running in production mode     
+    if (!isProduction) {
+        // HMR
+        allPlugins.push(new webpack.HotModuleReplacementPlugin());
+    }
+
     return allPlugins;
 }
 
-module.exports = env => {
-    return {
-    mode: "development",
+module.exports = env => { 
+    
+    const isProduction = env && env.PRODUCTION;
+
+    return {   
+    mode: isProduction ? "production" : "development",     
     entry: { 
-        app: "./src/index.tsx",        
+        app: "./src/index.tsx",
     },
     output: {
-        filename: "[name].[hash].js",
+        filename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",        
         path: path.resolve("dist"),        
     },
     stats: {
@@ -54,12 +67,24 @@ module.exports = env => {
     optimization: {
         splitChunks: {
           cacheGroups: {
-            node_vendors : {
+            app: {
+                test : /[\\/]src[\\/]/,
+                chunks: 'all',
+                name: 'app',
+                priority: 3,
+            },
+            react: {
+                test : /[\\/]node_modules[\\/](react|react-dom|prop-types)[\\/]/,
+                chunks: 'all',
+                name: 'react',
+                priority: 2,
+            },
+            vendors : {
                 test : /[\\/]node_modules[\\/]/,
                 chunks: 'all',
                 name: 'vendor',
                 priority: 1,
-            },                 
+            },                                  
           }
         },
     },   

@@ -1,4 +1,4 @@
 npx lerna bootstrap - install all the dependencies, new devs get the project up an running 
-
+npx lerna run start --scope=app1
 
 NOTE: There is no way to remove pacakges like npx lerna remove, this needs to be done manually 

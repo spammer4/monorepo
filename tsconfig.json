@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "noImplicitThis" : true,
+        "strictFunctionTypes": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": true,        
+        "module": "commonjs",
+        "target": "esnext",
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "baseUrl": "./",
+        "paths" : {
+            "@common/*" : ["packages/common/*"],
+        }
+    },
+    "include": [
+        "packages/**/*",
+        "global.d.ts"
+    ],
+    "exclude": [
+    "node_modules"
+    ]
+}
