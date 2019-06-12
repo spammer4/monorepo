@@ -16,8 +16,7 @@ const plugins = (env) => {
         new HtmlWebPackPlugin({
             template: "./src/index.html",
             filename: "index.html",
-            inject: "head",
-            chunks: ["app","react","vendor"]
+            inject: "head"            
           }),
           // This will defer the script until the page has been loaded, extension of HtmlWebPackPlugin
           new ScriptExtHtmlWebPackPlugin({
@@ -55,7 +54,7 @@ module.exports = env => {
     return {   
     mode: isProduction ? "production" : "development",     
     entry: { 
-        app: "./src/index.tsx",
+        app: "./src/index.tsx",        
     },
     output: {
         filename: isProduction ? "[name].[contenthash].js" : "[name].[hash].js",        
@@ -67,29 +66,38 @@ module.exports = env => {
     optimization: {
         splitChunks: {
           cacheGroups: {
+            common: {
+                test : /[\\/]common[\\/]/,
+                enforce: true,                      // Ignore min chunk size, max async requests, max initial requests and always create chunks.                   
+                chunks: 'all',
+                name: 'common',                                
+                priority: 2
+          },
             app: {
                 test : /[\\/]src[\\/]/,
                 chunks: 'all',
-                name: 'app',
-                priority: 3,
-            },
-            react: {
-                test : /[\\/]node_modules[\\/](react|react-dom|prop-types)[\\/]/,
-                chunks: 'all',
-                name: 'react',
-                priority: 2,
+                name: 'app',                                
+                priority: 1
             },
             vendors : {
                 test : /[\\/]node_modules[\\/]/,
                 chunks: 'all',
-                name: 'vendor',
-                priority: 1,
-            },                                  
+                name: 'vendor',                
+                reuseExistingChunk: true,
+                priority: -10,
+            },
+            react: {
+                test : /[\\/]node_modules[\\/](react|react-dom|prop-types)[\\/]/,
+                chunks: 'all',
+                name: 'react',                                
+                priority: 0,
+            },
           }
         },
     },   
     devServer: {
-        port: 8080,
+        //port: 8080,
+        //port: port,
         contentBase: "./dist",
         hot: true,   
         index: "index.html",    

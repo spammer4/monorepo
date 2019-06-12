@@ -6,9 +6,13 @@
   "scripts": {
     "test": "jest",
     "build": "yarn run clean && webpack --mode production --env.PRODUCTION --config ../../webpack.config.js",
-    "start": "yarn run webpack-dev-server --mode development --env.DEVELOPMENT --open --config ../../webpack.config.js",
+    "start": "yarn run webpack-dev-server --port 8080 --mode development --env.DEVELOPMENT --open --config ../../webpack.config.js",
     "clean": "rimraf dist",
     "analyze-bundles": "yarn run clean && webpack --config ../../webpack.config.js --env.ANALYSE_BUNDLES=yes"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "@types/lodash": "^4.14.134",
+    "lodash": "^4.17.11"
+  }
 }

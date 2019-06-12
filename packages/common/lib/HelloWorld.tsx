@@ -12,7 +12,7 @@ export class HelloWorld extends React.Component<IHelloWorldProps, {}> {
         <h1>
           {this.props.application}
         </h1>
-        <p>This means that the config is working.</p>
+        <p>This means that the monorepo is working!</p>
         <div className="greentext">
           This text should be green and be brought in from the style sheet.
         </div>
