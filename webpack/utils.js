@@ -30,12 +30,15 @@ const directorySpecificConfig = (referencedPackages) => {
               }) ],
         }        
     }
-    console.error("Broken!!!");
+    
     const packages = readdirSync("./packages");
     packages.map(dir => {
 
         const entry = { [dir] : `./packages/${dir}/src/index.tsx` };
-        Object.assign(entries,entry);
+
+        if (existsSync(entry[dir])) {
+            Object.assign(entries,entry);
+        }
 
         const packagesToExclude = ([...packages]).filter(directory => directory != dir 
             && referencedPackages[dir] 

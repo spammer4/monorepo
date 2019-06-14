@@ -67,13 +67,7 @@ module.exports = env => {
 
     return {   
     mode: isDevelopment ? "development" : "production",     
-    entry: entries.mainEntryPoints, /*{
-        app1: "./packages/app1/src/index.tsx", 
-        app2: "./packages/app2/src/index.tsx",
-        app3: "./packages/app3/src/index.tsx", 
-        app4: "./packages/app4/src/index.tsx", 
-        common: "./packages/common/index.tsx"
-    }*/
+    entry: entries.mainEntryPoints, 
     output: {
         filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",        
         path: path.resolve(buildOutputFolder),     
