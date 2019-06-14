@@ -20,7 +20,7 @@ const plugins = (env) => {
 
         // Copies the index.html template and tells it where to inject the script tags 
         new HtmlWebPackPlugin({
-            template: "./src/index.html",
+            template: "./webpack/index.html",
             filename: "index.html",
             inject: "head"            
           }),
@@ -30,13 +30,16 @@ const plugins = (env) => {
           }),
           // We can define constants here 
           new webpack.DefinePlugin(getGlobals()),
-        // Copy any static resources required to the dist folder  
+        // Copy any static resources required to the dist folder, this will got to each of 
+        // that packages and copy out the images. In the images folder they are put in their 
+        // own directories.  
         new CopyWebpackPlugin([
-            { from: "src/images", to: "images" }
+            { from: "./packages/**/src/images/*", to: "./images" }
         ]),
+        // Extract out any CSS and put it in the appropriate external file, use contenthash 
+        // for browser caching.
         new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: '[id].css'
+            chunkFilename: "[name][contenthash].css"
         }) 
     ]);
 
@@ -62,12 +65,16 @@ module.exports = env => {
 
     return {   
     mode: isDevelopment ? "development" : "production",     
-    entry: { 
-        app: "./src/index.tsx",        
+    entry: {
+        app1: "./packages/app1/src/index.tsx", 
+        app2: "./packages/app2/src/index.tsx",
+        app3: "./packages/app3/src/index.tsx", 
+        app4: "./packages/app4/src/index.tsx", 
+        common: "./packages/common/index.tsx"
     },
     output: {
         filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",        
-        path: path.resolve(buildOutputFolder),        
+        path: path.resolve(buildOutputFolder),     
     },
     stats: {
         colors: true,
@@ -76,33 +83,33 @@ module.exports = env => {
     optimization: {
         splitChunks: {
           cacheGroups: {
-                debug : {
+                /* debug : {
                     test : chunk => {
                         console.log(chunk.context);
                         return false;
                     }, 
                     chunks: 'all',
                     name: 'debug',                
-                },
-                vendors : {
-                    test : /[\\/]node_modules[\\/]/,
+                },*/ 
+                common : {
+                    test : /[\\/]common[\\/]/,
                     chunks: 'all',
-                    name: 'vendor',                
-                    enforce: true,
+                    name: 'common',
+                    // Ignore min chunk size, max async requests, max initial requests and always create chunks.                
+                    enforce: true, 
                 },
                 react : {
-                    //test : /[\\/]node_modules[\\/](react)/,
-                    test: /[\\/]packages[\\/].*[\\/]node_modules[\\/]*/,
+                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                     chunks: 'all',
-                    name: 'local',                
-                    enforce: true,
+                    name: 'react',                
+                    //enforce: true,
                 }
             }
         }
     },
        /*    common: {
                 test : /[\\/]common[\\/]/,
-                enforce: true,                      // Ignore min chunk size, max async requests, max initial requests and always create chunks.                   
+                enforce: true,                                         
                 chunks: 'all',
                 name: 'common',                                
 //                priority: 2

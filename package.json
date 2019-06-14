@@ -8,7 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "jest --colors --coverage"
+    "test": "jest --colors --coverage",
+    "build": "webpack --mode production --env.PRODUCTION --config webpack.config.js"
   },
   "repository": {
     "type": "git",
