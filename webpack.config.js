@@ -1,4 +1,3 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ScriptExtHtmlWebPackPlugin = require("script-ext-html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
@@ -6,24 +5,27 @@ const webpack = require("webpack");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const fs = require("fs");
+const { getGlobals, directorySpecificConfig } = require("./webpack/utils");
 
-const getGlobals = () => { 
-    return fs.existsSync(path.resolve("./globals.js")) ? require(path.resolve("./globals.js")) : {};
-}
+// Modify this array if one packages references another, this ensures that it will
+// be included in the index html file 
+
+const referencedPackages = { 
+    app1: ['common'],
+    app2: ['common'],
+    app3: ['common'],
+    app4: ['common']
+};
+
+const entries = directorySpecificConfig(referencedPackages);
 
 const plugins = (env) => {    
-
     const isDevelopment = env && env.DEVELOPMENT | false;
 
     const allPlugins = ([
-
-        // Copies the index.html template and tells it where to inject the script tags 
-        new HtmlWebPackPlugin({
-            template: "./webpack/index.html",
-            filename: "index.html",
-            inject: "head"            
-          }),
+        // Copies the index.html template and tells it where to inject the script tags
+        // for all the packages
+        ...entries.htmlWebpackEntries,         
           // This will defer the script until the page has been loaded, extension of HtmlWebPackPlugin
           new ScriptExtHtmlWebPackPlugin({
             defaultAttribute: 'defer'
@@ -39,7 +41,7 @@ const plugins = (env) => {
         // Extract out any CSS and put it in the appropriate external file, use contenthash 
         // for browser caching.
         new MiniCssExtractPlugin({
-            chunkFilename: "[name][contenthash].css"
+            chunkFilename: "[name].[contenthash].css"
         }) 
     ]);
 
@@ -65,13 +67,13 @@ module.exports = env => {
 
     return {   
     mode: isDevelopment ? "development" : "production",     
-    entry: {
+    entry: entries.mainEntryPoints, /*{
         app1: "./packages/app1/src/index.tsx", 
         app2: "./packages/app2/src/index.tsx",
         app3: "./packages/app3/src/index.tsx", 
         app4: "./packages/app4/src/index.tsx", 
         common: "./packages/common/index.tsx"
-    },
+    }*/
     output: {
         filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",        
         path: path.resolve(buildOutputFolder),     
@@ -102,33 +104,10 @@ module.exports = env => {
                     test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
                     chunks: 'all',
                     name: 'react',                
-                    //enforce: true,
                 }
             }
         }
     },
-       /*    common: {
-                test : /[\\/]common[\\/]/,
-                enforce: true,                                         
-                chunks: 'all',
-                name: 'common',                                
-//                priority: 2
-          },
-            app: {
-                test : /[\\/]src[\\/]/,
-                chunks: 'all',
-                name: 'app',    
-                enforce: true,                            
-//                priority: 1
-            },
-            react: {
-                test : /[\\/]node_modules[\\/](react)[\\/]/,
-                chunks: 'all',
-                name: 'react',
-                enforce: true,                                
-//                priority: 0,
-            },
-          }*/  
     devServer: {
         contentBase: buildOutputFolder,
         hot: true,   
@@ -156,6 +135,7 @@ module.exports = env => {
                 ]
             },
 
+            // Handle the typescript
             { test: /\.tsx?$/, loader: "awesome-typescript-loader?tsconfig=../../tsconfig.json" },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
@@ -171,10 +151,6 @@ module.exports = env => {
 
             // File loader will process png, gif and jpegs and output them to the dist folder 
             { test: /\.(png|jpg|gif)$/, use: [ { loader: "file-loader"} ] },
-
-            // typings-for-css-loader enabled type generation for style sheets, NOTE: Breaking changes after 1.0.0 on css-loader
-
-            //{ test: /\.css$/, use: [ { loader: "style-loader" }, { loader: "typings-for-css-modules-loader", options: { modules: true, namedExport: true, camelCase: true } } ] }            
         ]
     },   
     plugins: plugins(env)

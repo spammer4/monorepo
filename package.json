@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "test": "jest --colors --coverage",
-    "build": "webpack --mode production --env.PRODUCTION --config webpack.config.js"
+    "clean": "rimraf dist",
+    "start": "http-server ./dist",
+    "build": "yarn run clean && webpack --mode production --env.PRODUCTION --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^24.0.13",
+    "@types/lodash": "^4.14.134",
     "@types/react": "^16.7.13",
     "@types/react-dom": "^16.0.11",
     "awesome-typescript-loader": "^5.2.1",
@@ -58,10 +61,10 @@
     "webpack": "^4.27.1",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10",
-    "@types/lodash": "^4.14.134"
+    "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
+    "http-server": "^0.11.1",
     "lerna": "^3.15.0",
     "portscanner": "^2.2.0",
     "react": "^16.6.3",
