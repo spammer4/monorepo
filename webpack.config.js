@@ -3,11 +3,10 @@ const ScriptExtHtmlWebPackPlugin = require("script-ext-html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const fs = require("fs");
-
-console.log();
 
 const getGlobals = () => { 
     return fs.existsSync(path.resolve("./globals.js")) ? require(path.resolve("./globals.js")) : {};
@@ -34,7 +33,11 @@ const plugins = (env) => {
         // Copy any static resources required to the dist folder  
         new CopyWebpackPlugin([
             { from: "src/images", to: "images" }
-        ]) 
+        ]),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[id].css'
+        }) 
     ]);
 
     // If we are not doing any analysis on the bundle then we don't need this. 
@@ -55,6 +58,7 @@ const plugins = (env) => {
 module.exports = env => { 
     
     const isDevelopment = env && env.DEVELOPMENT | false;
+    const buildOutputFolder = "./dist";
 
     return {   
     mode: isDevelopment ? "development" : "production",     
@@ -63,45 +67,63 @@ module.exports = env => {
     },
     output: {
         filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",        
-        path: path.resolve("dist"),        
+        path: path.resolve(buildOutputFolder),        
     },
     stats: {
-        children: false  
+        colors: true,
+        chunks: true  
     },
     optimization: {
         splitChunks: {
           cacheGroups: {
-            common: {
+                debug : {
+                    test : chunk => {
+                        console.log(chunk.context);
+                        return false;
+                    }, 
+                    chunks: 'all',
+                    name: 'debug',                
+                },
+                vendors : {
+                    test : /[\\/]node_modules[\\/]/,
+                    chunks: 'all',
+                    name: 'vendor',                
+                    enforce: true,
+                },
+                react : {
+                    //test : /[\\/]node_modules[\\/](react)/,
+                    test: /[\\/]packages[\\/].*[\\/]node_modules[\\/]*/,
+                    chunks: 'all',
+                    name: 'local',                
+                    enforce: true,
+                }
+            }
+        }
+    },
+       /*    common: {
                 test : /[\\/]common[\\/]/,
                 enforce: true,                      // Ignore min chunk size, max async requests, max initial requests and always create chunks.                   
                 chunks: 'all',
                 name: 'common',                                
-                priority: 2
+//                priority: 2
           },
             app: {
                 test : /[\\/]src[\\/]/,
                 chunks: 'all',
-                name: 'app',                                
-                priority: 1
-            },
-            vendors : {
-                test : /[\\/]node_modules[\\/]/,
-                chunks: 'all',
-                name: 'vendor',                
-                reuseExistingChunk: true,
-                priority: -10,
+                name: 'app',    
+                enforce: true,                            
+//                priority: 1
             },
             react: {
-                test : /[\\/]node_modules[\\/](react|react-dom|prop-types)[\\/]/,
+                test : /[\\/]node_modules[\\/](react)[\\/]/,
                 chunks: 'all',
-                name: 'react',                                
-                priority: 0,
+                name: 'react',
+                enforce: true,                                
+//                priority: 0,
             },
-          }
-        },
-    },   
+          }*/  
     devServer: {
-        contentBase: "./dist",
+        contentBase: buildOutputFolder,
         hot: true,   
         index: "index.html",    
         inline: true,   
@@ -138,7 +160,7 @@ module.exports = env => {
 
             // css-loader turns the css into a string and the style loader put the style tag in the page. Styles will be included in the bundle,
             // this is not efficient as they could be loaded async while the page is loading. Use extract-text-plugin to extract it out. 
-            { test: /\.css$/, use: [ { loader: "style-loader" }, { loader: "css-loader" }] },
+            { test: /\.css$/, use: [ { loader: MiniCssExtractPlugin.loader }, { loader: "css-loader" }] },
 
             // File loader will process png, gif and jpegs and output them to the dist folder 
             { test: /\.(png|jpg|gif)$/, use: [ { loader: "file-loader"} ] },

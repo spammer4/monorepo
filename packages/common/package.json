@@ -1,6 +1,6 @@
 {
   "name": "common",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "> TODO: description",
   "author": "paul <spammer4@planetsugar.co.uk>",
   "homepage": "https://github.com/spammer4/typescript-base/tree/master/packages/common#readme",
@@ -22,5 +22,11 @@
   },
   "bugs": {
     "url": "https://github.com/spammer4/monorepo/issues"
+  },
+  "devDependencies": {
+    "mini-css-extract-plugin": "^0.7.0"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.134"
   }
 }

@@ -1,10 +1,7 @@
 const config = require("../../jest.config");
 
+// Remaps the root to the local src folder, as the root will run again packages
+
 config.roots = ['src/'];
-config.moduleNameMapper = {
-  "^.+\\.(css|less)$": "<rootDir>/../common/styles/__mocks__/styleMock.js",
-  "^@app(.*)$" : "<rootDir>/src$1",
-  "^@common(.*)$" : "<rootDir>/../common/$1", 
-},
 
 module.exports = config;

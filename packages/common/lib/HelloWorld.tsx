@@ -1,5 +1,4 @@
 import * as React from "react";
-import "@common/styles/main.css";
 
 export interface IHelloWorldProps {
   application: string;

@@ -1,5 +1,5 @@
 {
-  "name": "app1",
+  "name": "app4",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.134",
-    "lodash": "^4.17.11",
-    "common": "^0.0.1"
+    "lodash": "^4.17.11"
   }
 }
