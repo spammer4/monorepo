@@ -7,5 +7,10 @@
     "@types/lodash": "^4.14.134",
     "lodash": "^4.17.11",
     "common": "^0.0.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "start": "yarn run webpack-dev-server --port 8080 --mode development --env.DEVELOPMENT --open --config ../../webpack.config.js",
+    "analyze-bundles": "webpack --config ../../webpack.config.js --env.ANALYSE_BUNDLES=yes --env.ANALYZER_PORT 8888"
   }
 }

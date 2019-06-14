@@ -1,14 +1,11 @@
-0 silly argv { _: [ 'add' ],
-0 silly argv   globs: [ 'packages/app1' ],
+0 silly argv { _: [ 'run' ],
+0 silly argv   scope: 'app3',
+0 silly argv   stream: true,
 0 silly argv   lernaVersion: '3.15.0',
-0 silly argv   '$0':
-0 silly argv    '..\\..\\..\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
-0 silly argv   pkg: 'packages/common' }
+0 silly argv   '$0': 'node_modules\\lerna\\cli.js',
+0 silly argv   script: 'analyze-bundles' }
 1 notice cli v3.15.0
 2 verbose rootPath C:\Users\Lenovo\Documents\WebDevelopment\monorepo
-3 error Error: exited with error code: 128
-3 error     at ChildProcess.<anonymous> (C:\Users\Lenovo\Documents\WebDevelopment\monorepo\node_modules\@evocateur\pacote\lib\util\finished.js:12:19)
-3 error     at ChildProcess.emit (events.js:182:13)
-3 error     at maybeClose (internal/child_process.js:962:16)
-3 error     at Socket.stream.socket.on (internal/child_process.js:381:11)
-3 error     at Socket.emit (events.js:182:13)
+3 error JSONError: Unexpected token } in JSON at position 432 while parsing near '...": "^4.14.134"  },}' in packages\app3\package.json
+3 error     at module.exports (C:\Users\Lenovo\Documents\WebDevelopment\monorepo\node_modules\parse-json\index.js:26:19)
+3 error     at parse (C:\Users\Lenovo\Documents\WebDevelopment\monorepo\node_modules\load-json-file\index.js:8:29)
