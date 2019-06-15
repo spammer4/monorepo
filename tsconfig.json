@@ -9,7 +9,7 @@
         "noUnusedParameters": true,
         "removeComments": true,        
         "module": "commonjs",
-        "target": "esnext",
+        "target": "es5",
         "jsx": "react",
         "experimentalDecorators": true,
         "baseUrl": "./",

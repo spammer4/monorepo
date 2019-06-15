@@ -1,5 +1,6 @@
 const ScriptExtHtmlWebPackPlugin = require("script-ext-html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require("path");
 const webpack = require("webpack");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
@@ -77,6 +78,18 @@ module.exports = env => {
         chunks: true  
     },
     optimization: {
+        minimizer: [new UglifyJsPlugin({
+            parallel: true,
+            cache: true,
+            uglifyOptions: {
+                output: {
+                    comments: false
+                },
+                compress: {
+                    drop_console:true
+                }    
+            } 
+        })],
         splitChunks: {
           cacheGroups: {
                 /* debug : {
