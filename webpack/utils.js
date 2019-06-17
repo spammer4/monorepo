@@ -4,8 +4,10 @@ const path = require("path");
 
 /* Gets the global variables for a particular project */
 
-const getGlobals = () => { 
-    return existsSync(path.resolve("./globals.js")) ? require(path.resolve("./globals.js")) : {};
+const getRuntimeVars = () => {      
+    const locals = existsSync(path.resolve("./globals.runtime.js")) ? require(path.resolve("./globals.runtime")) : {}; 
+    const globals = existsSync(path.resolve("../../globals.runtime.js")) ? require(path.resolve("../../globals.runtime")) : {};      
+    return Object.assign({}, locals, globals);
 }
 
 /* Gets directory specific config when generating the index.html files */
@@ -60,6 +62,6 @@ const directorySpecificConfig = (referencedPackages) => {
 }
 
 module.exports = {
-    getGlobals,
+    getRuntimeVars,
     directorySpecificConfig
 }

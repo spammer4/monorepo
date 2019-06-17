@@ -6,7 +6,7 @@ const webpack = require("webpack");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { getGlobals, directorySpecificConfig } = require("./webpack/utils");
+const { getRuntimeVars, directorySpecificConfig } = require("./webpack/utils");
 
 // Modify this array if one packages references another, this ensures that it will
 // be included in the index html file 
@@ -32,7 +32,7 @@ const plugins = (env) => {
             defaultAttribute: 'defer'
           }),
           // We can define constants here 
-          new webpack.DefinePlugin(getGlobals()),
+          new webpack.DefinePlugin(getRuntimeVars()),
         // Copy any static resources required to the dist folder, this will got to each of 
         // that packages and copy out the images. In the images folder they are put in their 
         // own directories.  
