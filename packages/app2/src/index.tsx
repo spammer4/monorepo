@@ -5,11 +5,13 @@ import "common/styles/main.css";
 import { HelloWorld } from "common/lib/HelloWorld";
 
 declare var _DEFAULT_GREETING: string;
+declare var _GLOBAL_STRING: string;
 
 ReactDOM.render(
   <React.Fragment>
       <HelloWorld application="app2" />
       <p>{_DEFAULT_GREETING}</p>
+      <p>{_GLOBAL_STRING}</p>
   </React.Fragment>,
   document.getElementById("app")
 );

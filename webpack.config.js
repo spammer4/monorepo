@@ -6,7 +6,7 @@ const webpack = require("webpack");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { getGlobals, directorySpecificConfig } = require("./webpack/utils");
+const { getRuntimeVars, directorySpecificConfig } = require("./webpack/utils");
 
 // Modify this array if one packages references another, this ensures that it will
 // be included in the index html file 
@@ -15,7 +15,8 @@ const referencedPackages = {
     app1: ['common'],
     app2: ['common'],
     app3: ['common'],
-    app4: ['common']
+    app4: ['common'],
+    lazy: ['common']
 };
 
 const entries = directorySpecificConfig(referencedPackages);
@@ -31,8 +32,8 @@ const plugins = (env) => {
           new ScriptExtHtmlWebPackPlugin({
             defaultAttribute: 'defer'
           }),
-          // We can define constants here 
-          new webpack.DefinePlugin(getGlobals()),
+          // Load in local and runtime development variables
+          new webpack.DefinePlugin(getRuntimeVars()),
         // Copy any static resources required to the dist folder, this will got to each of 
         // that packages and copy out the images. In the images folder they are put in their 
         // own directories.  
@@ -70,19 +71,20 @@ module.exports = env => {
     mode: isDevelopment ? "development" : "production",     
     entry: entries.mainEntryPoints, 
     output: {
-        filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",        
+        filename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",   
+        chunkFilename: isDevelopment ? "[name].[hash].js" : "[name].[contenthash].js",                
         path: path.resolve(buildOutputFolder),     
     },
     stats: {
         colors: true,
         chunks: true  
     },
-    optimization: {
+    /*optimization: {
         minimizer: [new UglifyJsPlugin({
             parallel: true,
             cache: true,
             uglifyOptions: {
-                output: {
+               output: {
                     comments: false
                 },
                 compress: {
@@ -91,7 +93,7 @@ module.exports = env => {
             } 
         })],
         splitChunks: {
-          cacheGroups: {
+     //     cacheGroups: {
                 /* debug : {
                     test : chunk => {
                         console.log(chunk.context);
@@ -100,24 +102,27 @@ module.exports = env => {
                     chunks: 'all',
                     name: 'debug',                
                 },*/ 
-                common : {
-                    test : /[\\/]common[\\/]/,
-                    chunks: 'all',
-                    name: 'common',
+     //           common : {
+     //               test : /[\\/]common[\\/]/,
+     //               chunks: 'all',
+     //               name: 'common',
                     // Ignore min chunk size, max async requests, max initial requests and always create chunks.                
-                    enforce: true, 
-                },
-                react : {
-                    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                    chunks: 'all',
-                    name: 'react',                
-                }
-            }
-        }
-    },
+      //              enforce: true, 
+      //          },
+      //          react : {
+      //              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+      //              chunks: 'all',
+      //              name: 'react',                
+       //         }
+        //    }
+      //  }
+    //},
     devServer: {
         contentBase: buildOutputFolder,
-        hot: true,   
+        hot: true,  
+        quiet: false,
+        noInfo: false,         
+        publicPath: '/',
         index: "index.html",    
         inline: true,   
         stats: {

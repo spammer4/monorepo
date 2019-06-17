@@ -1,0 +1,26 @@
+{
+  "name": "lazy",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "paul <spammer4@planetsugar.co.uk>",
+  "homepage": "https://github.com/spammer4/typescript-base/tree/master/packages/lazy#readme",
+  "license": "ISC",
+  "main": "src/index.tsx",
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spammer4/monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spammer4/monorepo/issues"
+  },
+  "scripts": {
+    "start": "yarn run webpack-dev-server --port 8084 --mode development --env.DEVELOPMENT --open --config ../../webpack.config.js",
+    "analyze-bundles": "webpack --config ../../webpack.config.js --env.ANALYSE_BUNDLES=yes --env.ANALYZER_PORT 8893"
+  }
+}

@@ -4,18 +4,16 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "noImplicitThis" : true,
+        "esModuleInterop": true,
         "strictFunctionTypes": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "removeComments": true,        
+        "removeComments": false,        
         "module": "commonjs",
         "target": "es5",
         "jsx": "react",
         "experimentalDecorators": true,
-        "baseUrl": "./",
-        "paths" : {
-            "x@common/*" : ["packages/common/*"],
-        }
+        "baseUrl": "./"      
     },
     "include": [
         "packages/**/*",
