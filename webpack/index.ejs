@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <!-- This is the ejs template -->
+    <head>
+        <meta charset="UTF-8" />
+        <title>Typescript and React Base - ejs template</title>
+        <% for(var i=0;i<htmlWebpackPlugin.files.css.length;i++) { %>
+                <link rel="stylesheet" type="text/css" href="<%=htmlWebpackPlugin.files.css[i] %>" />
+        <% } 
+           for(var i=0;i<htmlWebpackPlugin.files.js.length;i++) { %>
+                <script src="<%=htmlWebpackPlugin.files.js[i] %>" defer></script>
+        <% } %>
+    </head>
+    <body class="stars">
+        <div id="app"></div>                
+    </body>
+</html>

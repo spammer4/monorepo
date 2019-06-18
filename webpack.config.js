@@ -1,4 +1,3 @@
-const ScriptExtHtmlWebPackPlugin = require("script-ext-html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require("path");
@@ -7,6 +6,9 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const { TsConfigPathsPlugin } = require("awesome-typescript-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { getRuntimeVars, directorySpecificConfig } = require("./webpack/utils");
+
+// Uncomment if not using ejs 
+// const ScriptExtHtmlWebPackPlugin = require("script-ext-html-webpack-plugin");
 
 // Modify this array if one packages references another, this ensures that it will
 // be included in the index html file 
@@ -18,7 +20,8 @@ const referencedPackages = {
     app4: ['common']
 };
 
-const entries = directorySpecificConfig(referencedPackages);
+// The true means we are using ejs templates and not script-ext-html-webpack-plugin
+const entries = directorySpecificConfig(referencedPackages, true);
 
 const plugins = (env) => {    
     const isDevelopment = env && env.DEVELOPMENT | false;
@@ -26,12 +29,16 @@ const plugins = (env) => {
     const allPlugins = ([
         // Copies the index.html template and tells it where to inject the script tags
         // for all the packages
-        ...entries.htmlWebpackEntries,         
+        ...entries.htmlWebpackEntries,  
+
           // This will defer the script until the page has been loaded, extension of HtmlWebPackPlugin
-          new ScriptExtHtmlWebPackPlugin({
+          // Uncomment if not using ejs
+
+          /*new ScriptExtHtmlWebPackPlugin({
             defaultAttribute: 'defer'
-          }),
-          // We can define constants here 
+          }),*/
+
+          // Gets the runtime variables from  
           new webpack.DefinePlugin(getRuntimeVars()),
         // Copy any static resources required to the dist folder, this will got to each of 
         // that packages and copy out the images. In the images folder they are put in their 
@@ -133,6 +140,10 @@ module.exports = env => {
     },    
     module: {
         rules: [
+
+            // index.ejs is the template to house the JS files
+            { test: /\.ejs?$/, loader: "ejs-loader" },
+
             // TSLinter and loader
             { test: /\.tsx?$/, enforce: 'pre',
                 use: [
