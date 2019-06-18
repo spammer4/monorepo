@@ -12,7 +12,7 @@ const getRuntimeVars = () => {
 
 /* Gets directory specific config when generating the index.html files */
 
-const directorySpecificConfig = (referencedPackages, useEjs = false) => {
+const directorySpecificConfig = (referencedPackages) => {
     const entries = {};
     const htmlWebpackEntries = [];
 
@@ -25,16 +25,11 @@ const directorySpecificConfig = (referencedPackages, useEjs = false) => {
         return {
             mainEntryPoints: { app: `${process.cwd()}/src/index.tsx` },
             htmlWebpackEntries: [ new HtmlWebPackPlugin(
-              useEjs ? {
+              {
                 template: "../../webpack/index.ejs",
                 filename: `index.html`,
                 inject: false,            
-              } : {
-                template: "./src/index.html",
-                filename: `index.html`,
-                inject: "head"            
-              }
-            ) ],
+              })],
         }        
     }
     
@@ -52,17 +47,11 @@ const directorySpecificConfig = (referencedPackages, useEjs = false) => {
             && referencedPackages[dir].indexOf(directory)<0 );
         
         htmlWebpackEntries.push(new HtmlWebPackPlugin(
-          useEjs ? {
+          {
             template: "./webpack/index.ejs",
             excludeChunks: packagesToExclude,
             filename: `index.${dir}.html`,
             inject: false
-          } :
-          {
-            template: "./webpack/index.html",
-            excludeChunks: packagesToExclude,
-            filename: `index.${dir}.html`,
-            inject: "head"            
           }),
         );
     });
