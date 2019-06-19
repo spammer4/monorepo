@@ -36,7 +36,7 @@ const directorySpecificConfig = (referencedPackages) => {
     const packages = readdirSync("./packages");
     packages.map(dir => {
 
-        const entry = { [dir] : `./packages/${dir}/src/index.tsx` };
+        const entry = { [dir] : `./packages/${dir}/src/index.html` };
 
         if (existsSync(entry[dir])) {
             Object.assign(entries,entry);
