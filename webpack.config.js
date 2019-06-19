@@ -132,7 +132,7 @@ module.exports = env => {
         rules: [
 
             // index.ejs is the template to house the JS files
-            { test: /\.ejs?$/, loader: "ejs-loader" },
+          /*  { test: /\.ejs?$/, loader: "ejs-loader" }, */
 
             // TSLinter and loader
             { test: /\.tsx?$/, enforce: 'pre',
