@@ -1,4 +1,4 @@
-const { lstatSync, readdirSync, existsSync } = require("fs");
+const { readdirSync, existsSync } = require("fs");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
@@ -13,14 +13,11 @@ const getGlobals = () => {
 const directorySpecificConfig = (referencedPackages) => {
     const entries = {};
     const htmlWebpackEntries = [];
-
-    const isDirectory = dir => lstatSync(dir).isDirectory();
-
+    
     // Check to see if the packages directory exists, if it doesn't then we must be 
     // running this for a local package 
 
-    if (!existsSync("./packages")) {
-        console.log(process.cwd());
+    if (!existsSync("./packages")) {        
         return {
             mainEntryPoints: { app: `${process.cwd()}/src/index.tsx` },
             htmlWebpackEntries: [ new HtmlWebPackPlugin({
